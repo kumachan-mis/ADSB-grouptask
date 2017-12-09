@@ -1,0 +1,5 @@
+dat0_in: 8
+dat1_in: 16
+dat2_in: 11
+dat3_in: 7
+dat4_in: 9
