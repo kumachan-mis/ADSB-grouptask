@@ -32,14 +32,14 @@ public class Ngram
 		{
 			for (int index = str.indexOf(key); index >= 0; index = str.indexOf(key, index + 1))
 			{
-				if (index + 25 < str.length())
+				//if (index + 25 < str.length())
 					list.add(index);
 			}
 		});
 		return map;
 	}
 
-	public int distance(String s1, String s2)
+	public static int distance(String s1, String s2)
 	{
 		int edits[][] = new int[s1.length() + 1][s2.length() + 1];
 		for (int i = 0; i <= s1.length(); i++)
