@@ -12,7 +12,7 @@ typedef struct {
 
 node * make_new_node(char data, node * after);
 list * make_new_list();
-node * n_node(node * lookedNood, int n);
+node * n_node(node * lookedNode, int n);
 char n_data(list * linkedlist, int n);
 list * joint_list_n(list * inserted, list * linkedlist, int n);
 list * insert_data(list * inserted, char data[], int n);

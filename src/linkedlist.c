@@ -19,16 +19,16 @@ list * make_new_list()
     return newlist;
 }//新しいリンクリストを作成し, headを設定.新しいリンクリストへのポインタを返す.
 
-node * n_node(node * lookedNood, int n)
+node * n_node(node * lookedNode, int n)
 {
-    if(lookedNood == NULL){
+    if(lookedNode == NULL){
         return NULL;
     }
     else if(n == 0){
-        return lookedNood;
+        return lookedNode;
     }
     else{
-        return n_node(lookedNood -> next, n - 1);//１つ先のノードの n - 1番目になる.
+        return n_node(lookedNode -> next, n - 1);//１つ先のノードの n - 1番目になる.
     }
 }//n番目のノードへのポインタを返す.
 
