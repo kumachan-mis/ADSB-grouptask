@@ -104,6 +104,27 @@ list * replace_data(list * linkedlist, char data[], int n)
      return linkedlist;
 }//linkedlistのn番目からn + strlen(data) - 1までをdataに置き換え
 
+int check(node * a, node * b, int x, int y, int d)
+{
+    if(d == 0 || d - ((x - y) > 0 ? x - y : y - x) <= 0) return 0;
+
+    node * temp1 = a, * temp2 = b;
+    while(x > 0 && y > 0 && temp1 -> data == temp2 -> data) {
+        temp1 = temp1 -> next; temp2 = temp2 -> next;
+        x--; y--;
+    }
+    if(x == 0 || y == 0 
+    || check(temp1 -> next, temp2 -> next, x - 1, y - 1, d - 1) 
+    || check(temp1, temp2 -> next, x, y - 1, d - 1) 
+    || check(temp1 -> next, temp2, x - 1, y, d - 1)) return 1;
+    else return 0;
+}//しらすくんの編集距離part2書き換え
+
+int edit_distance(list * linkedlist1, list * linkedlist2, int d)
+{
+    return check(linkedlist1 -> head, linkedlist2 -> head,linkedlist1 -> length, linkedlist2 -> length, d);
+}
+
 void showR(node * showed){
     if(showed != NULL){
         printf("%c",showed -> data);
