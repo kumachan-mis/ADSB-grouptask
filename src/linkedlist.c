@@ -14,10 +14,10 @@ node * make_new_node(char data, node * after)
 list * make_new_list()
 {
     list * newlist = malloc(sizeof(list));
-    newlist -> head = make_new_node('\0', NULL);
+    newlist -> head = NULL;
     newlist -> length = 0;
     return newlist;
-}//新しいリンクリストを作成し, headを設定.新しいリンクリストへのポインタを返す.
+}//新しいリンクリストを作成し, length = 0を設定. 新しいリンクリストへのポインタを返す.
 
 node * n_node(node * lookedNode, int n)
 {
@@ -48,7 +48,7 @@ list * joint_list_n(list * inserted, list * linkedlist, int n)
     if(linkedlist -> length != 0){
         if(n == -1){
 
-             n_node(linkedlist -> head, linkedlist -> length - 1) -> next = inserted -> head;//挿入するものの\0の直前の次は挿入される方の先頭
+             n_node(linkedlist -> head, linkedlist -> length - 1) -> next = inserted -> head;//挿入するものの次は挿入される方の先頭
              inserted -> head = linkedlist -> head;//先頭の書き換え
 
         }//先頭への挿入
@@ -59,7 +59,7 @@ list * joint_list_n(list * inserted, list * linkedlist, int n)
 
                 node * np1th = nth ->next;//n + 1番目を見る
                 nth ->next = linkedlist -> head;//n番目の次は挿入するもののはじめ
-                n_node(linkedlist -> head, linkedlist -> length - 1) -> next = np1th;//挿入するものの\0の直前の次はn + 1番目
+                n_node(linkedlist -> head, linkedlist -> length - 1) -> next = np1th;//挿入するもののの次はn + 1番目
             }
         }
     }
