@@ -161,7 +161,6 @@ int alignment(node * node1, node * node2, unsigned long len1, unsigned long len2
         int c = alignment(node1 -> next, node2,  len1, len2, F, p - 1, q, score, gap) - gap;//上への移動
 
         F[p][q] = max(a, b, c);//スコアが最大のものを選ぶ
-
         return F[p][q].score;
     }
 }
@@ -178,21 +177,23 @@ list * call_alignment(list * list1, list * list2, unsigned long len1, unsigned l
     }//初期化
 
     alignment(list1-> head, list2 -> head, len1, len2, F, len1, len2, score, gap);//アラインメント
-    
-    int max = INT32_MIN;
+
+    int min = INT32_MAX;
     int index = 0;
-    p = len1 - 1;
-    for(q = len2; q < len1; q++){
-        if(F[p][q].score > max){
-            max = F[p][q].score;
-            index = q;
+    q = len2;
+
+    for(p = len2 + 1; p < len1 + 1; p++){
+        if(F[p][q].score < min){
+            min = F[p][q].score;
+            index = p;
         }
     }//len2文字目以降でスコアが一番小さいところを探す
-    q = index;
+
+    p = index;
     
     node * node1 = list1 -> head, * node2 = list2 -> head;
 
-    while(p != 0 && q != 0){
+    while(p != 0 || q != 0){
         if(F[p][q].to == 'd'){//斜めの移動
             node1 = node1 -> next;//更新
             node2 = node2 -> next;//更新
@@ -207,8 +208,7 @@ list * call_alignment(list * list1, list * list2, unsigned long len1, unsigned l
 
         }else if(F[p][q].to == 'u'){//上への移動
             node1 = node1 -> next;//更新
-            p--;//更新
-            
+            p--;//更新   
         }
     }//アラインメントに従ってgap部をつなぎ合わせ
     return list1;
