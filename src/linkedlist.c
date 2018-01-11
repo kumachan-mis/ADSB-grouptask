@@ -137,12 +137,12 @@ DP max(int a, int b, int c){
     a_d.to = 'd',  b_d.to = 'l', c_d.to = 'u';
 
     return (b > c) ? ((a > b) ? a_d : b_d) : ((a > c) ? a_d : c_d);
-}
+}//a斜め移動, b左移動, c上移動のうち最もスコアが高いものを返すと同時に移動法を設定
 
 int alignment(node * node1, node * node2, unsigned long len1, unsigned long len2, DP F[len1 + 1][len2 + 1], int p, int q, int ( * score)(char, char), int gap)
 {
     if(F[p][q].score != INT16_MIN){
-        return F[p][q].score;
+        return F[p][q].score;//メモ化
     }
     else if(p == 0 && q == 0){
         return (F[p][q].score = 0);
@@ -150,24 +150,24 @@ int alignment(node * node1, node * node2, unsigned long len1, unsigned long len2
     else if(p == 0 && q > 0){
         F[p][q].to = 'l';
         return (F[p][q].score = 0);
-    }
+    }//oDP行列の上側
     else if(p > 0 && q == 0){
         F[p][q].to = 'u';
         return (F[p][q].score = 0);
-    }
+    }//DP行列の左端
     else{
-        int a = alignment(node1 -> next, node2 -> next, len1, len2, F, p - 1, q - 1, score, gap) + score(node1 -> data, node2 -> data);
-        int b = alignment(node1, node2 -> next,  len1, len2, F, p, q - 1, score, gap) - gap;
-        int c = alignment(node1 -> next, node2,  len1, len2, F, p - 1, q, score, gap) - gap;
+        int a = alignment(node1 -> next, node2 -> next, len1, len2, F, p - 1, q - 1, score, gap) + score(node1 -> data, node2 -> data);//斜めへの移動
+        int b = alignment(node1, node2 -> next,  len1, len2, F, p, q - 1, score, gap) - gap;//左への移動
+        int c = alignment(node1 -> next, node2,  len1, len2, F, p - 1, q, score, gap) - gap;//上への移動
 
-        F[p][q] = max(a, b, c);
+        F[p][q] = max(a, b, c);//スコアが最大のものを選ぶ
 
         return F[p][q].score;
     }
 }
 
 list * call_alignment(list * list1, list * list2, unsigned long len1, unsigned long len2, int ( * score)(char, char), int gap)
-{
+{//len1 > len2を前提
     DP F[len1 + 1][len2 + 1];
     int p, q;
     for(p = 0; p < len1 + 1; p++){
@@ -175,9 +175,9 @@ list * call_alignment(list * list1, list * list2, unsigned long len1, unsigned l
             F[p][q].score = INT16_MIN;
             F[p][q].to = 'n';
         }
-    }
+    }//初期化
 
-    alignment(list1-> head, list2 -> head, len1, len2, F, len1, len2, score, gap);
+    alignment(list1-> head, list2 -> head, len1, len2, F, len1, len2, score, gap);//アラインメント
     
     int max = INT32_MIN;
     int index = 0;
@@ -187,31 +187,30 @@ list * call_alignment(list * list1, list * list2, unsigned long len1, unsigned l
             max = F[p][q].score;
             index = q;
         }
-    }
+    }//len2文字目以降でスコアが一番小さいところを探す
     q = index;
     
     node * node1 = list1 -> head, * node2 = list2 -> head;
 
     while(p != 0 && q != 0){
-        if(F[p][q].to == 'd'){
-            node1 = node1 -> next;
-            node2 = node2 -> next;
-            p--; q--;
+        if(F[p][q].to == 'd'){//斜めの移動
+            node1 = node1 -> next;//更新
+            node2 = node2 -> next;//更新
+            p--; q--;//更新
 
-        }else if(F[p][q].to == 'l'){
-            node * newnode = make_new_node(node2 -> data, node1 -> next);
-            node1 -> next = newnode;
-            node2 = node1 -> next;
-            node1 = node1 -> next;
-            q--;
+        }else if(F[p][q].to == 'l'){//左への移動
+            node * newnode = make_new_node(node2 -> data, node1 -> next);//ギャップ部を埋めるノードを作って
+            node1 -> next = newnode;//つなぎ合わせ
+            node1 = node1 -> next;//更新(newnodeを挿入した分移動しなければいけない)
+            node2 = node2 -> next;//更新
+            q--;//更新
 
-        }else if(F[p][q].to == 'u'){
-            node1 = node1 -> next;
-            p--;
+        }else if(F[p][q].to == 'u'){//上への移動
+            node1 = node1 -> next;//更新
+            p--;//更新
             
         }
-    }
-    printf("\n");
+    }//アラインメントに従ってgap部をつなぎ合わせ
     return list1;
 }
 
@@ -224,7 +223,7 @@ list * SW_alignment(list * list1, list * list2, int ( * score)(char, char), int 
         return call_alignment(list2, list1, len2, len1, score, (gap > 0) ? gap : - gap);
     }else{
         return NULL;
-    }
+    }//call_alignmentではlen1 > len2かつgap > 0なるように
 }
 
 void showR(node * showed){
