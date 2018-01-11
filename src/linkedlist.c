@@ -125,6 +125,115 @@ int edit_distance(list * linkedlist1, list * linkedlist2, int d)
     return check(linkedlist1 -> head, linkedlist2 -> head,linkedlist1 -> length, linkedlist2 -> length, d);
 }
 
+typedef struct{
+    int score;
+    char to;
+}DP;
+
+DP max(int a, int b, int c){
+    DP a_d, b_d, c_d;
+
+    a_d.score = a,  b_d.score = b,  c_d.score = c;
+    a_d.to = 'd',  b_d.to = 'l', c_d.to = 'u';
+
+    return (b > c) ? ((a > b) ? a_d : b_d) : ((a > c) ? a_d : c_d);
+}
+
+int alignment(node * node1, node * node2, unsigned long len1, unsigned long len2, DP F[len1 + 1][len2 + 1], int p, int q, int ( * score)(char, char), int gap)
+{
+    if(F[p][q].score != INT16_MIN){
+        return F[p][q].score;
+    }
+    else if(p == 0 && q == 0){
+        return (F[p][q].score = 0);
+    }
+    else if(p == 0 && q > 0){
+        F[p][q].to = 'l';
+        return (F[p][q].score = 0);
+    }
+    else if(p > 0 && q == 0){
+        F[p][q].to = 'u';
+        return (F[p][q].score = 0);
+    }
+    else{
+        int a = alignment(node1 -> next, node2 -> next, len1, len2, F, p - 1, q - 1, score, gap) + score(node1 -> data, node2 -> data);
+        int b = alignment(node1, node2 -> next,  len1, len2, F, p, q - 1, score, gap) - gap;
+        int c = alignment(node1 -> next, node2,  len1, len2, F, p - 1, q, score, gap) - gap;
+
+        F[p][q] = max(a, b, c);
+
+        return F[p][q].score;
+    }
+}
+
+list * call_alignment(list * list1, list * list2, unsigned long len1, unsigned long len2, int ( * score)(char, char), int gap)
+{
+    DP F[len1 + 1][len2 + 1];
+    int p, q;
+    for(p = 0; p < len1 + 1; p++){
+        for(q = 0; q < len2 + 1; q++){
+            F[p][q].score = INT16_MIN;
+            F[p][q].to = 'n';
+        }
+    }
+
+    alignment(list1-> head, list2 -> head, len1, len2, F, len1, len2, score, gap);
+    
+    for(p = 0; p < len1 + 1; p++){
+        for(q = 0; q < len2 + 1; q++){
+            printf("(%3d, %c)\t", F[p][q].score, F[p][q].to);
+        }
+        printf("\n");
+    }
+    
+    int max = INT32_MIN;
+    int index = 0;
+    p = len1 - 1;
+    for(q = len2; q < len1; q++){
+        if(F[p][q].score > max){
+            max = F[p][q].score;
+            index = q;
+        }
+    }
+    q = index;
+    
+    node * node1 = list1 -> head, * node2 = list2 -> head;
+
+    while(p != 0 && q != 0){
+        if(F[p][q].to == 'd'){
+            printf("d");
+            node1 = node1 -> next;
+            node2 = node2 -> next;
+            p--; q--;
+        }else if(F[p][q].to == 'l'){
+            printf("l");
+            node * newnode = make_new_node(node2 -> data, node1 -> next);
+            node1 -> next = newnode;
+            node2 = node1 -> next;
+            node1 = node1 -> next;
+            q--;
+        }else if(F[p][q].to == 'u'){
+            printf("u");
+            node1 = node1 -> next;
+            p--;
+        }
+    }
+    printf("\n");
+    return list1;
+}
+
+list * SW_alignment(list * list1, list * list2, int ( * score)(char, char), int gap){
+    int len1 = list1 -> length, len2 = list2 -> length;
+    
+    if(len1 >len2){
+        return call_alignment(list1, list2, len1, len2, score, (gap > 0) ? gap : - gap);
+    }else if(len2 > len1){
+        return call_alignment(list2, list1, len2, len1, score, (gap > 0) ? gap : - gap);
+    }else{
+        return NULL;
+    }
+}
+
 void showR(node * showed){
     if(showed != NULL){
         printf("%c",showed -> data);

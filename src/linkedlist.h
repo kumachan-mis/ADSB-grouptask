@@ -19,5 +19,6 @@ list * insert_data(list * inserted, char data[], int n);
 list *  delete_data(list * linkedlist, int a, int b);
 list * replace_data(list * linkedlist, char data[], int n);
 int edit_distance(list * linkedlist1, list * linkedlist2, int d);
+list * SW_alignment(list * list1, list * list2, int ( * score)(char, char), int gap);
 void show(list * linkedlist);
 #endif
