@@ -179,13 +179,6 @@ list * call_alignment(list * list1, list * list2, unsigned long len1, unsigned l
 
     alignment(list1-> head, list2 -> head, len1, len2, F, len1, len2, score, gap);
     
-    for(p = 0; p < len1 + 1; p++){
-        for(q = 0; q < len2 + 1; q++){
-            printf("(%3d, %c)\t", F[p][q].score, F[p][q].to);
-        }
-        printf("\n");
-    }
-    
     int max = INT32_MIN;
     int index = 0;
     p = len1 - 1;
@@ -201,21 +194,21 @@ list * call_alignment(list * list1, list * list2, unsigned long len1, unsigned l
 
     while(p != 0 && q != 0){
         if(F[p][q].to == 'd'){
-            printf("d");
             node1 = node1 -> next;
             node2 = node2 -> next;
             p--; q--;
+
         }else if(F[p][q].to == 'l'){
-            printf("l");
             node * newnode = make_new_node(node2 -> data, node1 -> next);
             node1 -> next = newnode;
             node2 = node1 -> next;
             node1 = node1 -> next;
             q--;
+
         }else if(F[p][q].to == 'u'){
-            printf("u");
             node1 = node1 -> next;
             p--;
+            
         }
     }
     printf("\n");
