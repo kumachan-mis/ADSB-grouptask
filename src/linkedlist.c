@@ -136,7 +136,9 @@ DP max(int a, int b, int c){
     a_d.score = a,  b_d.score = b,  c_d.score = c;
     a_d.to = 'd',  b_d.to = 'l', c_d.to = 'u';
 
-    return (b > c) ? ((a > b) ? a_d : b_d) : ((a > c) ? a_d : c_d);
+    return (b > c) ?
+      ((a > b) ? a_d : b_d)
+    : ((a > c) ? a_d : c_d);
 }//a斜め移動, b左移動, c上移動のうち最もスコアが高いものを返すと同時に移動法を設定
 
 int alignment(node * node1, node * node2, unsigned long len1, unsigned long len2, DP F[len1 + 1][len2 + 1], int p, int q, int ( * score)(char, char), int gap)
@@ -214,7 +216,8 @@ list * call_alignment(list * list1, list * list2, unsigned long len1, unsigned l
     return list1;
 }
 
-list * SW_alignment(list * list1, list * list2, int ( * score)(char, char), int gap){
+list * SW_alignment(list * list1, list * list2, int ( * score)(char, char), int gap)
+{
     int len1 = list1 -> length, len2 = list2 -> length;
     
     if(len1 >len2){
@@ -226,14 +229,16 @@ list * SW_alignment(list * list1, list * list2, int ( * score)(char, char), int 
     }//call_alignmentではlen1 > len2かつgap > 0なるように
 }
 
-void showR(node * showed){
+void showR(node * showed)
+{
     if(showed != NULL){
         printf("%c",showed -> data);
         showR(showed -> next);
     }
 }//showed以降の表示
 
-void show(list * linkedlist){
+void show(list * linkedlist)
+{
     showR(linkedlist -> head);
     printf("\n");
 }//linkedlistのデータの表示
