@@ -9,7 +9,8 @@ node *make_new_node(char data, node *after)
     newnode->data = data;
     newnode->next = after;
     int i;
-    for(i = 0; i < 7; i++){
+    for (i = 0; i < 7; i++)
+    {
         newnode->abc_del[i] = 0;
     }
     return newnode;

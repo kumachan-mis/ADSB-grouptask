@@ -44,11 +44,11 @@ int main()
         }
 
         int j;
-         for (j = 0; j < BITAP_LEN; j++)
+        for (j = 0; j < BITAP_LEN; j++)
         {
             bitap_ret[j] = -1;
         }
-        
+
         bitap(S, T, BITAP_D, bitap_ret, BITAP_LEN);
 
         node *p = T->head;
@@ -86,7 +86,7 @@ int main()
     {
         part->head = p;
         int j;
-        
+
         /*
         for(j = 0; j < 7; j++){
             printf("%2d ",p ->abc_del[j]);
@@ -94,25 +94,25 @@ int main()
          printf("\n");// 投票結果を表示
          */
 
-         //最終的な編集(ここから)
+        //最終的な編集(ここから)
         for (j = 0; j < 3; j++)
         {
             if (p->abc_del[j] > p->abc_del[(1 + j) % 3] + p->abc_del[(2 + j) % 3])
             {
                 char c[] = {'a' + j};
                 insert_data(part, c, 0);
-            }//置換
+            } //置換
             if (p->abc_del[j] > p->abc_del[(1 + j) % 3 + 3] + p->abc_del[(2 + j) % 3 + 3] + p->abc_del[6])
             {
                 node *newnode = make_new_node('a' + j, p->next);
                 p->next = newnode;
-            }//挿入
+            } //挿入
         }
 
         if (p->abc_del[6] > p->abc_del[3] + p->abc_del[4] + p->abc_del[5])
         {
             delete_data(part, 0, 2);
-        }//削除
+        } //削除
         //最終的な編集(ここまで)
 
         p = p->next;
