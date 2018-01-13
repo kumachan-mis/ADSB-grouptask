@@ -157,7 +157,7 @@ DP max(int a, int b, int c)
                    : ((a > c) ? a_d : c_d);
 } //a斜め移動, b左移動, c上移動のうち最もスコアが高いものを返すと同時に移動法を設定
 
-int alignment(node *node1, node *node2, unsigned long len1, unsigned long len2, DP F[len1 + 1][len2 + 1], int p, int q, int (*score)(char, char), int gap)
+int DP_matrix(node *node1, node *node2, unsigned long len1, unsigned long len2, DP F[len1 + 1][len2 + 1], int p, int q, int (*score)(char, char), int gap)
 {
     if (F[p][q].score != INT16_MIN)
     {
@@ -179,16 +179,16 @@ int alignment(node *node1, node *node2, unsigned long len1, unsigned long len2, 
     } //DP行列の左端
     else
     {
-        int a = alignment(node1->next, node2->next, len1, len2, F, p - 1, q - 1, score, gap) + score(node1->data, node2->data); //斜めへの移動
-        int b = alignment(node1, node2->next, len1, len2, F, p, q - 1, score, gap) - gap;                                       //左への移動
-        int c = alignment(node1->next, node2, len1, len2, F, p - 1, q, score, gap) - gap;                                       //上への移動
+        int a = DP_matrix(node1->next, node2->next, len1, len2, F, p - 1, q - 1, score, gap) + score(node1->data, node2->data); //斜めへの移動
+        int b = DP_matrix(node1, node2->next, len1, len2, F, p, q - 1, score, gap) - gap;                                       //左への移動
+        int c = DP_matrix(node1->next, node2, len1, len2, F, p - 1, q, score, gap) - gap;                                       //上への移動
 
         F[p][q] = max(a, b, c); //スコアが最大のものを選ぶ
         return F[p][q].score;
     }
 }
 
-list *call_alignment(list *list1, list *list2, unsigned long len1, unsigned long len2, int (*score)(char, char), int gap)
+list *alignment(list *list1, list *list2, unsigned long len1, unsigned long len2, int (*score)(char, char), int gap)
 { //len1 > len2を前提
     DP F[len1 + 1][len2 + 1];
     int p, q;
@@ -201,7 +201,7 @@ list *call_alignment(list *list1, list *list2, unsigned long len1, unsigned long
         }
     } //初期化
 
-    alignment(list1->head, list2->head, len1, len2, F, len1, len2, score, gap); //アラインメント
+    DP_matrix(list1->head, list2->head, len1, len2, F, len1, len2, score, gap); //アラインメント
 
     int min = INT32_MAX;
     int index = 0;
@@ -252,11 +252,11 @@ list *SW_alignment(list *list1, list *list2, int (*score)(char, char), int gap)
 
     if (len1 > len2)
     {
-        return call_alignment(list1, list2, len1, len2, score, (gap > 0) ? gap : -gap);
+        return alignment(list1, list2, len1, len2, score, (gap > 0) ? gap : -gap);
     }
     else if (len2 > len1)
     {
-        return call_alignment(list2, list1, len2, len1, score, (gap > 0) ? gap : -gap);
+        return alignment(list2, list1, len2, len1, score, (gap > 0) ? gap : -gap);
     }
     else
     {
