@@ -80,7 +80,7 @@ void alignment(list *list1, list *list2, int len1, int len2, int (*score)(char, 
 
     p = index;
     node *node1 = list1->head, *node2 = list2->head;
-    
+
     while (p != 0 || q != 0)
     {
         if (F[p][q].to == 'd')
@@ -110,7 +110,6 @@ void alignment(list *list1, list *list2, int len1, int len2, int (*score)(char, 
             }
             p--; //更新
         }
-
     }
 }
 
@@ -181,11 +180,12 @@ void bitap_main(list *list1, list *list2, int len1, int len2, int d, int ret[], 
                 }
             }
         }
-        if (index >= len)
+        current_node = current_node->next;
+
+        if(current_node == NULL || index >= len)
         {
             break;
         }
-        current_node = current_node->next;
     }
 }
 

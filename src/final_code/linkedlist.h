@@ -4,7 +4,7 @@ typedef struct Node
 {
   char data;
   struct Node *next;
-  unsigned long abc_del[7];
+  int abc_del[7];
 } node; //データと次のノードへのポインタを持つ
 
 typedef struct
