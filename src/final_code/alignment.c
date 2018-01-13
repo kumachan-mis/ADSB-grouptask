@@ -84,8 +84,9 @@ void alignment(list *list1, list *list2, int len1, int len2, int (*score)(char, 
     while (p != 0 || q != 0)
     {
         if (F[p][q].to == 'd')
-        {                        //斜めの移動
-            if(node1 != NULL && node2 != NULL){
+        { //斜めの移動
+            if (node1 != NULL && node2 != NULL)
+            {
                 node1->abc_del[node2->data - 'a']++;
                 node1 = node1->next; //更新
                 node2 = node2->next; //更新
@@ -94,15 +95,16 @@ void alignment(list *list1, list *list2, int len1, int len2, int (*score)(char, 
             q--; //更新
         }
         else if (F[p][q].to == 'l')
-        {                        //左への移動
-            if(node1 != NULL && node2 != NULL){
+        { //左への移動
+            if (node1 != NULL && node2 != NULL)
+            {
                 node1->abc_del[node2->data - 'a' + 3]++;
                 node2 = node2->next; //更新
             }
             q--; //更新
         }
         else if (F[p][q].to == 'u')
-        {                        //上への移動
+        { //上への移動
             if (node1 != NULL && q != 0)
             {
                 node1->abc_del[6]++;
@@ -182,7 +184,7 @@ void bitap_main(list *list1, list *list2, int len1, int len2, int d, int ret[], 
         }
         current_node = current_node->next;
 
-        if(current_node == NULL || index >= len)
+        if (current_node == NULL || index >= len)
         {
             break;
         }
