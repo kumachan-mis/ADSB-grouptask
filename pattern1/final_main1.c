@@ -10,7 +10,7 @@
 #define BITAP_LEN 30
 #define PART_LEN 50
 
-#define BITAP_D 3
+#define BITAP_D 4
 int MATCH, MISS, GAP;
 
 int score(char a, char b)
@@ -18,7 +18,11 @@ int score(char a, char b)
     return (a == b) ? MATCH : -MISS;
 }
 
-int max_int(int a, int b, int c){
+int max_int2(int a, int b){
+    return (a > b) ? a : b;
+}
+
+int max_int3(int a, int b, int c){
     return (b > c) ? ((a > b) ? a : b)
                    : ((a > c) ? a : c);
 }
@@ -31,7 +35,7 @@ int main(int argc, char *argv[])
     char Sstring[Slen + 1];
     int bitap_ret[BITAP_LEN] = {};
     if (argc != 4) {
-      fprintf(stderr, "Usage: ./a.out (MATCH) (MISS) (GAP) < dat*_in > dat*_out\n");
+      fprintf(stderr, "Usage: ./a.out (MATCH) (MISS) (GAP) < dat*_in > dat*_out\nAll of 3 numbers are zero or more, integer.\n");
       exit(EXIT_FAILURE);
     }
     MATCH = atoi(argv[1]), MISS = atoi(argv[2]), GAP = atoi(argv[3]);
@@ -90,6 +94,7 @@ int main(int argc, char *argv[])
     }
 
     node *p = T->head;
+    node *pre = NULL;
     list *part = make_new_list();
 
     for (i = 0; i < T->length; i++)
@@ -107,25 +112,34 @@ int main(int argc, char *argv[])
         //最終的な編集(ここから)
         for (j = 0; j < 3; j++)
         {
-            if (p->abc_del[j] > p->abc_del[(1 + j) % 3] + p->abc_del[(2 + j) % 3])
+            if (p->abc_del[j] > max_int2(p->abc_del[(1 + j) % 3], p->abc_del[(2 + j) % 3]))
             {
                 char c[] = {'a' + j};
                 replace_data(part, c, 0);
             } //置換
-            if (1.5 * p->abc_del[j % 3 + 3] > p->abc_del[(1 + j) % 3 + 3] + p->abc_del[(2 + j) % 3 + 3]
-            && p->abc_del[j % 3 + 3] > max_int(p->abc_del[0], p->abc_del[1], p->abc_del[2]))
+            if (p->abc_del[j % 3 + 3] > max_int2(p->abc_del[(1 + j) % 3 + 3], p->abc_del[(2 + j) % 3 + 3])
+            && p->abc_del[j % 3 + 3] > max_int3(p->abc_del[0], p->abc_del[1], p->abc_del[2]))
             {
                 char c[] = {'a' + j};
                 insert_data(part, c, 0);
+                p = p->next;
             } //挿入
         }
 
-        if (p->abc_del[6] > max_int(p->abc_del[0], p->abc_del[1], p->abc_del[2]))
+        if (p->abc_del[6] > max_int3(p->abc_del[0], p->abc_del[1], p->abc_del[2]))
         {
-            delete_data(part, 0, 2);
+            if(pre == NULL)
+            {
+                T->head = T->head->next;
+            }
+            else{
+                pre->next = p->next;
+            }
+
+            T->length--;
         } //削除
         //最終的な編集(ここまで)
-
+        pre = p;
         p = p->next;
         if (p == NULL)
         {
@@ -134,5 +148,6 @@ int main(int argc, char *argv[])
     }
 
     show(T);
+    printf("%d\n", T->length);
     return 0;
 }
