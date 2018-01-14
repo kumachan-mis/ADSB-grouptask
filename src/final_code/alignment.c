@@ -79,7 +79,7 @@ void alignment(list *list1, list *list2, int len1, int len2, int (*score)(char, 
     } //len2文字目以降でスコアが一番小さいところを探す
 
     p = index;
-    node *node1 = list1->head, *node2 = list2->head;
+    node *node1 = n_node(list1->head, len1 - index), *node2 = list2->head;
 
     while (p != 0 || q != 0)
     {

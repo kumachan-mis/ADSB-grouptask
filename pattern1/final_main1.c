@@ -18,6 +18,11 @@ int score(char a, char b)
     return (a == b) ? MATCH : -MISS;
 }
 
+int max_int(int a, int b, int c){
+    return (b > c) ? ((a > b) ? a : b)
+                   : ((a > c) ? a : c);
+}
+
 int main(int argc, char *argv[])
 {
     list *T = make_new_list();
@@ -101,16 +106,17 @@ int main(int argc, char *argv[])
             if (p->abc_del[j] > p->abc_del[(1 + j) % 3] + p->abc_del[(2 + j) % 3])
             {
                 char c[] = {'a' + j};
-                insert_data(part, c, 0);
+                replace_data(part, c, 0);
             } //置換
-            if (p->abc_del[j] > p->abc_del[(1 + j) % 3 + 3] + p->abc_del[(2 + j) % 3 + 3] + p->abc_del[6])
+            if (1.5 * p->abc_del[j % 3 + 3] > p->abc_del[(1 + j) % 3 + 3] + p->abc_del[(2 + j) % 3 + 3]
+            && p->abc_del[j % 3 + 3] > max_int(p->abc_del[0], p->abc_del[1], p->abc_del[2]))
             {
-                node *newnode = make_new_node('a' + j, p->next);
-                p->next = newnode;
+                char c[] = {'a' + j};
+                insert_data(part, c, 0);
             } //挿入
         }
 
-        if (p->abc_del[6] > p->abc_del[3] + p->abc_del[4] + p->abc_del[5])
+        if (p->abc_del[6] > max_int(p->abc_del[0], p->abc_del[1], p->abc_del[2]))
         {
             delete_data(part, 0, 2);
         } //削除
