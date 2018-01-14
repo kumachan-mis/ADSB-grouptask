@@ -113,7 +113,7 @@ list *replace_data(list *linkedlist, char data[], int n)
 {
     node *temp = n_node(linkedlist->head, n);
     int i = 0;
-    for (i = 0; i < strlen(data); i++)
+    for (i = 0; i < (int)strlen(data); i++)
     {
         temp->data = data[i];
         temp = temp->next;

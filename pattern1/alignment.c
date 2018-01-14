@@ -50,8 +50,10 @@ int DP_matrix(node *node1, node *node2, int len1, int len2, DP F[len1 + 1][len2 
     }
 }
 
-void alignment(list *list1, list *list2, int len1, int len2, int (*score)(char, char), int gap)
-{ //len1 > len2を前提
+void alignment(list *list1, list *list2, int (*score)(char, char), int gap)
+{
+    int len1 = list1->length, len2 = list2->length;
+    if (len1 < len2) return alignment(list2, list1, score, (gap > 0) ? gap : -gap);
     DP F[len1 + 1][len2 + 1];
     int p, q;
     for (p = 0; p < len1 + 1; p++)
@@ -115,21 +117,10 @@ void alignment(list *list1, list *list2, int len1, int len2, int (*score)(char, 
     }
 }
 
-void SW_alignment(list *list1, list *list2, int (*score)(char, char), int gap)
+void bitap(list *list1, list *list2, int d, int ret[], int len)
 {
     int len1 = list1->length, len2 = list2->length;
-    if (len1 > len2)
-    {
-        alignment(list1, list2, len1, len2, score, (gap > 0) ? gap : -gap);
-    }
-    else if (len2 > len1)
-    {
-        alignment(list2, list1, len2, len1, score, (gap > 0) ? gap : -gap);
-    }
-}
-
-void bitap_main(list *list1, list *list2, int len1, int len2, int d, int ret[], int len)
-{ //len1 > len2を前提
+    if (len1 < len2) return bitap(list2, list1, d, ret, len);
     unsigned long mask[3] = {};
     unsigned long state[d + 1], saved_state[d + 1];
     unsigned long finish = 1 << (len2 - 1);
@@ -188,19 +179,5 @@ void bitap_main(list *list1, list *list2, int len1, int len2, int d, int ret[], 
         {
             break;
         }
-    }
-}
-
-void bitap(list *list1, list *list2, int d, int ret[], int len)
-{
-    int len1 = list1->length, len2 = list2->length;
-
-    if (len1 > len2)
-    {
-        bitap_main(list1, list2, len1, len2, d, ret, len);
-    }
-    else if (len2 > len1)
-    {
-        bitap_main(list2, list1, len2, len1, d, ret, len);
     }
 }
