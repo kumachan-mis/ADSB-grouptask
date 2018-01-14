@@ -25,6 +25,10 @@ int main(int argc, char *argv[])
     list *S = make_new_list();
     char Sstring[Slen + 1];
     int bitap_ret[BITAP_LEN] = {};
+    if (argc != 4) {
+      fprintf(stderr, "Usage: ./a.out (MATCH) (MISS) (GAP) < dat*_in > dat*_out\n");
+      exit(EXIT_FAILURE);
+    }
     MATCH = atoi(argv[1]), MISS = atoi(argv[2]), GAP = atoi(argv[3]);
     
     scanf("%s", Tstring);
@@ -67,13 +71,13 @@ int main(int argc, char *argv[])
             {
                 p = n_node(p, bitap_ret[j]);
                 part->head = p;
-                SW_alignment(S, part, score, GAP);
+                alignment(S, part, score, GAP);
             }
             else if (bitap_ret[j] != bitap_ret[j - 1] && T->length - bitap_ret[j] > PART_LEN && bitap_ret[j] >= 0)
             {
                 p = n_node(p, bitap_ret[j] - bitap_ret[j - 1]);
                 part->head = p;
-                SW_alignment(S, part, score, GAP);
+                alignment(S, part, score, GAP);
             }
         }
 
