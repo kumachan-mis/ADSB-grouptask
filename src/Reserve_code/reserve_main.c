@@ -6,7 +6,7 @@
 #define maxTlen 105000
 #define Snum 20000
 #define Slen 25
-
+#define RATE 1
 int main()
 {
     list *T = make_new_list();
@@ -27,7 +27,7 @@ int main()
     int i;
     int index = 0;
 
-    for (i = 0; i < Snum / 2; i++)
+    for (i = 0; i < Snum/RATE; i++)
     {
         scanf("%s", Sstring);
         Sstring[20] = '\0';
